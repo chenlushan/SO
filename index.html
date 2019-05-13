@@ -1,468 +1,214 @@
-﻿
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> <html lang="zh-CN">
 
+<!DOCTYPE html>
+<html>
 <head>
-
-    <title>网站维护中，请稍后访问</title>
-
-    <meta http-equiv="content-type" content="text/html;charset=utf-8">
-
-    <meta http-equiv="content-language" content="zh-CN">
-
-<link rel="stylesheet" href="http://911188.com/css/weihu.css">
-    <style type="text/css">
-
-        body {margin:0;padding:0;background-color:#000000;font-size:0;overflow:hidden}
-
-        div {margin:0;padding:0;position:absolute;font-size:0;overflow:hidden}
-
-        canvas{background-color:#000000;overflow:hidden}
-
-    </style>
-
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新闻热点</title>
+<meta name="keywords" content="新闻排行榜，新闻热点,20218" />
+<meta name="description" content="新闻中心排行，实时新闻排行榜，显示从当前时间起24小时内各频道新闻浏览量最高的排行情况，三小时更新,20218.CN。" />
+<meta name="author" content="环球网" />
+<link rel="stylesheet" href="http://himg2.huanqiu.com/statics/hq2017/index1/css/index.css?2">
+<style type="text/css">
+.wrapCon{width:720px;padding:0 0 12px 0;}
+.conFir{padding:12px 0 0 0;}
+.conSec{padding:12px 0 0 0;}
+.leftSec{width:359px;}
+.centerSec{padding-left:20px;}
+.videoNews{padding:3px 0 12px 0;}
+.overseaChina{padding:12px 0 0 0;}
+.secNewsList{padding-right:20px;}
+.ad_box{ padding:0 5px;}
+</style>
 </head>
 
-<style type="text/css">
-body{cursor:url(../images/default.cur),default;}
-a:hover,li:hover,img:hover{cursor:url(../images/link.cur),pointer;}
-</style>
-<style>
-*{margin: 0;padding: 0;}
-#container {
-	position: absolute;
-	height: 100%;
-	width: 100%;
-}
-#output {
-	width: 100%;
-	height: 100%;
-}
-.color{
-	width: 120px;
-	height: 20px;
-	margin: 0 auto;
-	position: fixed;
-	left: 50%;
-	margin-left: -60px;
-	bottom: 20px;
-}
-.cs{
-	width: 100%;
-	height: 100%;
-	margin: 0 auto;
-	position: absolute;
-	text-align:center;
-}
-
-img#logo {
-    width: 128px;
-    background-size: cover;
-    border-radius: 200px;
-    box-shadow: 0px 0px 40px rgba(63, 81, 181, 0.72);
-    border: 3px solid #00a0ff;
-    opacity: 1;
-    margin: 0 auto;
-    margin-top: 20px;
-	margin-bottom: 20px;
-	transition: all 1.0s;  
-}
-#logo:hover {
-    box-shadow: 0 0 10px #fff;
-    -webkit-box-shadow: 0 0 19px #fff;
-    transform:rotate(360deg);
-    -ms-transform:rotate(360deg); 	/* IE 9 */
-    -moz-transform:rotate(360deg); 	/* Firefox */
-    -webkit-transform:rotate(360deg); /* Safari 和 Chrome */
-    -o-transform:rotate(360deg); 	/* Opera */
-    filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-}
-</style>
-
-
-
-<script type="text/javascript">
-
-    function $i(id) { return document.getElementById(id); }
-
-    function $r(parent,child) { (document.getElementById(parent)).removeChild(document.getElementById(child)); }
-
-    function $t(name) { return document.getElementsByTagName(name); }
-
-    function $c(code) { return String.fromCharCode(code); }
-
-    function $h(value) { return ('0'+Math.max(0,Math.min(255,Math.round(value))).toString(16)).slice(-2); }
-
-    function _i(id,value) { $t('div')[id].innerHTML+=value; }
-
-    function _h(value) { return !hires?value:Math.round(value/2); }
-
-    function get_screen_size()
-
-    {
-
-        var w=document.documentElement.clientWidth;
-
-        var h=document.documentElement.clientHeight;
-
-        return Array(w,h);
-
-    }
-
-    var url=document.location.href;
-
-    var flag=true;
-
-    var test=true;
-
-    var n=parseInt((url.indexOf('n=')!=-1)?url.substring(url.indexOf('n=')+2,((url.substring(url.indexOf('n=')+2,url.length)).indexOf('&')!=-1)?url.indexOf('n=')+2+(url.substring(url.indexOf('n=')+2,url.length)).indexOf('&'):url.length):512);
-
-    var w=0;
-
-    var h=0;
-
-    var x=0;
-
-    var y=0;
-
-    var z=0;
-
-    var star_color_ratio=0;
-
-    var star_x_save,star_y_save;
-
-    var star_ratio=256;
-
-    var star_speed=4;
-
-    var star_speed_save=0;
-
-    var star=new Array(n);
-
-    var color;
-
-    var opacity=0.1;
-
-    var cursor_x=0;
-
-    var cursor_y=0;
-
-    var mouse_x=0;
-
-    var mouse_y=0;
-
-    var canvas_x=0;
-
-    var canvas_y=0;
-
-    var canvas_w=0;
-
-    var canvas_h=0;
-
-    var context;
-
-    var key;
-
-    var ctrl;
-
-    var timeout;
-
-    var fps=0;
-
-    function init()
-
-    {
-
-        var a=0;
-
-        for(var i=0;i<n;i++)
-
-        {
-
-            star[i]=new Array(5);
-
-            star[i][0]=Math.random()*w*2-x*2;
-
-            star[i][1]=Math.random()*h*2-y*2;
-
-            star[i][2]=Math.round(Math.random()*z);
-
-            star[i][3]=0;
-
-            star[i][4]=0;
-
-        }
-
-        var starfield=$i('starfield');
-
-        starfield.style.position='absolute';
-
-        starfield.width=w;
-
-        starfield.height=h;
-
-        context=starfield.getContext('2d');
-
-        context.fillStyle='rgb(0,0,0)';
-
-        context.strokeStyle='rgb(255,255,255)';
-
-        var adsense=$i('adsense');
-
-        adsense.style.left=Math.round((w-728)/2)+'px';
-
-        adsense.style.top=(h-15)+'px';
-
-        adsense.style.width=728+'px';
-
-        adsense.style.height=15+'px';
-
-        adsense.style.display='block';
-
-    }
-
-    function anim()
-
-    {
-
-        mouse_x=cursor_x-x;
-
-        mouse_y=cursor_y-y;
-
-        context.fillRect(0,0,w,h);
-
-        for(var i=0;i<n;i++)
-
-        {
-
-            test=true;
-
-            star_x_save=star[i][3];
-
-            star_y_save=star[i][4];
-
-            star[i][0]+=mouse_x>>4; if(star[i][0]>x<<1) { star[i][0]-=w<<1; test=false; } if(star[i][0]<-x<<1) { star[i][0]+=w<<1; test=false; }
-
-            star[i][1]+=mouse_y>>4; if(star[i][1]>y<<1) { star[i][1]-=h<<1; test=false; } if(star[i][1]<-y<<1) { star[i][1]+=h<<1; test=false; }
-
-            star[i][2]-=star_speed; if(star[i][2]>z) { star[i][2]-=z; test=false; } if(star[i][2]<0) { star[i][2]+=z; test=false; }
-
-            star[i][3]=x+(star[i][0]/star[i][2])*star_ratio;
-
-            star[i][4]=y+(star[i][1]/star[i][2])*star_ratio;
-
-            if(star_x_save>0&&star_x_save<w&&star_y_save>0&&star_y_save<h&&test)
-
-            {
-
-                context.lineWidth=(1-star_color_ratio*star[i][2])*2;
-
-                context.beginPath();
-
-                context.moveTo(star_x_save,star_y_save);
-
-                context.lineTo(star[i][3],star[i][4]);
-
-                context.stroke();
-
-                context.closePath();
-
-            }
-
-        }
-
-        timeout=setTimeout('anim()',fps);
-
-    }
-
-    function move(evt)
-
-    {
-
-        evt=evt||event;
-
-        cursor_x=evt.pageX-canvas_x;
-
-        cursor_y=evt.pageY-canvas_y;
-
-    }
-
-    function key_manager(evt)
-
-    {
-
-        evt=evt||event;
-
-        key=evt.which||evt.keyCode;
-
-        switch(key)
-
-        {
-
-            case 27:
-
-                flag=flag?false:true;
-
-                if(flag)
-
-                {
-
-                    timeout=setTimeout('anim()',fps);
-
-                }
-
-                else
-
-                {
-
-                    clearTimeout(timeout);
-
-                }
-
-                break;
-
-            case 32:
-
-                star_speed_save=(star_speed!=0)?star_speed:star_speed_save;
-
-                star_speed=(star_speed!=0)?0:star_speed_save;
-
-                break;
-
-            case 13:
-
-                context.fillStyle='rgba(0,0,0,'+opacity+')';
-
-                break;
-
-        }
-
-        top.status='key='+((key<100)?'0':'')+((key<10)?'0':'')+key;
-
-    }
-
-    function release()
-
-    {
-
-        switch(key)
-
-        {
-
-            case 13:
-
-                context.fillStyle='rgb(0,0,0)';
-
-                break;
-
-        }
-
-    }
-
-    function mouse_wheel(evt)
-
-    {
-
-        evt=evt||event;
-
-        var delta=0;
-
-        if(evt.wheelDelta)
-
-        {
-
-            delta=evt.wheelDelta/120;
-
-        }
-
-        else if(evt.detail)
-
-        {
-
-            delta=-evt.detail/3;
-
-        }
-
-        star_speed+=(delta>=0)?-0.2:0.2;
-
-        if(evt.preventDefault) evt.preventDefault();
-
-    }
-
-    function start()
-
-    {
-
-        resize();
-
-        anim();
-
-    }
-
-    function resize()
-
-    {
-
-        w=parseInt((url.indexOf('w=')!=-1)?url.substring(url.indexOf('w=')+2,((url.substring(url.indexOf('w=')+2,url.length)).indexOf('&')!=-1)?url.indexOf('w=')+2+(url.substring(url.indexOf('w=')+2,url.length)).indexOf('&'):url.length):get_screen_size()[0]);
-
-        h=parseInt((url.indexOf('h=')!=-1)?url.substring(url.indexOf('h=')+2,((url.substring(url.indexOf('h=')+2,url.length)).indexOf('&')!=-1)?url.indexOf('h=')+2+(url.substring(url.indexOf('h=')+2,url.length)).indexOf('&'):url.length):get_screen_size()[1]);
-
-        x=Math.round(w/2);
-
-        y=Math.round(h/2);
-
-        z=(w+h)/2;
-
-        star_color_ratio=1/z;
-
-        cursor_x=x;
-
-        cursor_y=y;
-
-        init();
-
-    }
-
-    document.onmousemove=move;
-
-    document.onkeypress=key_manager;
-
-    document.onkeyup=release;
-
-    document.onmousewheel=mouse_wheel; if(window.addEventListener) window.addEventListener('DOMMouseScroll',mouse_wheel,false);
-
-</script>
-
-<body onload="start()" onresize="resize()" onorientationchange="resize()" onmousedown="context.fillStyle='rgba(0,0,0,'+opacity+')'" onmouseup="context.fillStyle='rgb(0,0,0)'">
-
-<canvas id="starfield" style="background-color:#000000"></canvas>
-
-<div id="adsense" style="position:absolute;background-color:transparent;display:none">
-
+<body>
+<div class="wrap">
+	<!-- 内容外侧 begin-->
+	<div class="wrapBg">
+		<div class="wrapPic">
+			<!-- 内容部分 begin-->
+			<div class="wrapCon">
+				<!-- 第一部分 begin-->
+				<div class="conFir">
+					<!-- 左侧 begin-->
+					<div class="leftFir">
+						<!-- 焦点图 begin -->
+						<div id="foucsBox">
+							<ul class="imgCon" id="imgCon">
+                                <!--展示图片开始-->
+                                                                                                <li>
+                                    <a href="http://china.huanqiu.com/photo/2019-05/2931557.html" title="11年，4015天，96360小时 沉痛悼念大地震遇难者" target="_blank">
+                                        <img src="http://himg2.huanqiu.com/attachment2010/2019/0512/09/38/20190512093848274.jpg" />
+                                    </a>
+                                    <div class="imgTitle"><a href="http://china.huanqiu.com/photo/2019-05/2931557.html" target="_blank" title="11年，4015天，96360小时 沉痛悼念大地震遇难者">11年，4015天，96360小时 沉痛悼念大地震遇难者</a></div>
+                                    <div class="showPage"></div>
+                                </li>
+                                                                                                                                <li>
+                                    <a href="http://mil.huanqiu.com/gt/2019-05/2931553.html" title="神盾舰又下饺子！大连船厂两艘052D舰同时下水" target="_blank">
+                                        <img src="http://himg2.huanqiu.com/attachment2010/2019/0512/09/07/20190512090757971.jpg" />
+                                    </a>
+                                    <div class="imgTitle"><a href="http://mil.huanqiu.com/gt/2019-05/2931553.html" target="_blank" title="神盾舰又下饺子！大连船厂两艘052D舰同时下水">神盾舰又下饺子！大连船厂两艘052D舰同时下水</a></div>
+                                    <div class="showPage"></div>
+                                </li>
+                                                                                                                                <li>
+                                    <a href="http://world.huanqiu.com/photo/2019-05/2931579.html" title="异彩纷呈！韩空军特技飞行表演" target="_blank">
+                                        <img src="http://himg2.huanqiu.com/attachment2010/2019/0512/13/34/20190512013431773.jpg" />
+                                    </a>
+                                    <div class="imgTitle"><a href="http://world.huanqiu.com/photo/2019-05/2931579.html" target="_blank" title="异彩纷呈！韩空军特技飞行表演">异彩纷呈！韩空军特技飞行表演</a></div>
+                                    <div class="showPage"></div>
+                                </li>
+                                                                                                                                <li>
+                                    <a href="http://world.huanqiu.com/photo/2019-05/2931549.html" title="印尼一监狱发生大规模暴乱100多名囚犯逃跑" target="_blank">
+                                        <img src="http://himg2.huanqiu.com/attachment2010/2019/0512/08/51/20190512085159938.jpg" />
+                                    </a>
+                                    <div class="imgTitle"><a href="http://world.huanqiu.com/photo/2019-05/2931549.html" target="_blank" title="印尼一监狱发生大规模暴乱100多名囚犯逃跑">印尼一监狱发生大规模暴乱100多名囚犯逃跑</a></div>
+                                    <div class="showPage"></div>
+                                </li>
+                                                                                                                                <li>
+                                    <a href="http://look.huanqiu.com/" title="爱你三千遍！母亲节晒晒动物界的跨界“奶妈” " target="_blank">
+                                        <img src="http://himg2.huanqiu.com/attachment2010/2019/0512/07/25/20190512072501877.jpg" />
+                                    </a>
+                                    <div class="imgTitle"><a href="http://look.huanqiu.com/" target="_blank" title="爱你三千遍！母亲节晒晒动物界的跨界“奶妈” ">爱你三千遍！母亲节晒晒动物界的跨界“奶妈” </a></div>
+                                    <div class="showPage"></div>
+                                </li>
+                                                                                                <li>
+                                    <!-- Ad Survey 广告位代码  首页焦点图尾帧new-->
+                                    <script type="text/javascript">AD_SURVEY_Add_AdPos("7000185");</script>
+                                    <div class="showPage"></div>
+                                </li>
+                                <!--展示图片结束-->
+							</ul>
+							<div class="foucs"></div>
+							<div class="rBtn foucsButton"><img /></div>
+							<div class="lBtn foucsButton"><img /></div>
+						</div>
+						<!-- 焦点图 end -->
+						<script type="text/javascript">
+							(function() {
+								var foucsBox = document.getElementById('imgCon'),
+									foucsBoxEle = foucsBox.getElementsByTagName('li'),
+									foucsObj = foucsBoxEle[foucsBoxEle.length - 1], t = foucsObj.getElementsByClassName("imgTitle");
+								!t.length&&foucsObj.parentNode.removeChild(foucsObj);
+							})();
+						</script>
+					</div>
+					<!-- 左侧 end-->
+				</div>
+				<!-- 第一部分 end-->
+
+				<!-- 第二部分 begin-->
+				<div class="conSec clear">
+					<!-- 左侧 begin-->
+					<div class="leftSec">
+						<!-- 右侧-要闻 begin-->
+						<div class="secNewsBlock">
+							<div class="indexTitle">
+								<strong>要闻</strong>
+							</div>
+							<div class="secNewsList">
+								<p><a href="http://taiwan.huanqiu.com/article/2019-05/14880874.html?agt=29239" se_prerender_url="complete" target="_blank">蔡英文被曝要借&quot;郑成功继任玉皇大帝&quot;拉选票 网友:侮辱神庙</a></p>
+<p><a href="http://world.huanqiu.com/exclusive/2019-05/14882053.html?agt=29239" se_prerender_url="complete" target="_blank">特鲁多政府欢迎中国参与北极，BBC：加拿大在向中国示好</a></p>
+<p><a href="http://world.huanqiu.com/exclusive/2019-05/14879133.html?agt=29239" target="_blank">伊朗总统鲁哈尼号召国内团结 应对美国&ldquo;前所未有&rdquo;的压力</a></p>
+<p><a href="http://world.huanqiu.com/exclusive/2019-05/14879525.html?agt=29239" se_prerender_url="loading" target="_blank">菲律宾总统杜特尔特当众问女市长：你能和我一起私奔吗？</a></p>
+<p><a href="http://world.huanqiu.com/exclusive/2019-05/14878779.html?agt=29239" target="_blank">英媒：极端组织&ldquo;伊斯兰国&rdquo;宣称在印度建&ldquo;省&rdquo;</a></p>                            </div>
+                            <div class="secNewsList">
+                                <p><a href="http://mil.huanqiu.com/world/2019-05/14878999.html?agt=29239" target="_blank">一天亮出两款大杀器！美海空军同时发射洲际弹道导弹</a></p>
+<p><a href="http://world.huanqiu.com/special/2019CDAC/index.html?agt=29239" target="_blank">【亚洲文明对话大会】</a><a href="http://china.huanqiu.com/special/fdxsd/index.html?agt=29239" target="_blank">【壮丽70年&middot;奋斗新时代】</a><a href="http://china.huanqiu.com/special/zmhyl/index.html?agt=29239" target="_blank">追梦火焰蓝</a></p>                                <p><a href="http://finance.huanqiu.com/?agt=29239" se_prerender_url="complete" target="_blank">人民日报头版头条：我国消费&ldquo;主引擎&rdquo;动力强</a></p>
+<p><a href="http://tech.huanqiu.com/discovery/2019-05/14878728.html?agt=29239" target="_blank">治理漫天飞絮该有个时间表</a> <a href="http://tech.huanqiu.com/internet/2019-05/14879134.html?agt=29239" se_prerender_url="complete" target="_blank">优步上市首日跌破发行价</a></p>
+<p><a href="http://finance.huanqiu.com/roll/2019-05/14878626.html?agt=29239" target="_blank">大病保险报销比例提高</a> <a href="http://tech.huanqiu.com/diginews/2019-05/14880309.html?agt=29239" se_prerender_url="complete" target="_blank">台积电开始量产苹果A13芯片</a></p>                            </div>
+                            <div class="secNewsList">
+                                <p><a href="http://health.huanqiu.com/special/kangmei/index.html?agt=29239" target="_blank">康美药业系财务造假&ldquo;惯犯&rdquo;？曾遭证监会立案调查</a></p>
+<p><a href="http://health.huanqiu.com/healthindustry/2019-05/14863257.html?agt=29239" target="_blank">癌症、银屑病都能治？地磁泉违法宣传套路深</a></p>                                <p><a href="http://fashion.huanqiu.com/pic/2019-05/2931328.html?agt=29239" target="_blank">女神容颜不老 海瑟薇长裙飘飘宛如仙女</a></p>
+<p><a href="http://ent.huanqiu.com/star/mingxing-neidi/2019-05/14879980.html?agt=29239" target="_blank">母亲节昆凌长文吐25岁当妈心声：感激周杰伦付出</a></p>                                <p><a href="http://www.visitbeijing.com.cn/a1/a-XE39HX04F0D97E71170619?agt=29239" target="_blank">最美的5月都在这里，只有北京人知道，错过再等一年！</a></p>							</div>
+						</div>
+						<!-- 右侧-要闻 end-->
+					</div>
+					<!-- 左侧 end-->
+
+					<!-- 中间 begin-->
+					<div class="centerSec">
+                        <!-- 中间-视频 begin-->
+                        <div class="videoBlock">
+                            <div class="indexTitle">
+                                <strong>视频</strong>
+                            </div>
+                            <div class="videoPic">
+                                <ul class="videoPic clear">
+                                    <li>
+                                                                                                                        <a href="http://v.huanqiu.com/observation/2019-05/14868943.html" target="_blank">
+                                            <img src="http://himg2.huanqiu.com/attachment2010/2019/0510/09/32/20190510093247949.jpg" alt="每层都能旋转的全景房 " />
+                                            <span></span>
+                                        </a>
+                                        <p>
+                                            <a href="http://v.huanqiu.com/observation/2019-05/14868943.html" target="_blank">每层都能旋转的全景房 </a>
+                                        </p>
+                                                                                                                    </li>
+                                    <li>
+                                                                                                                        <a href="http://mil.huanqiu.com/milmovie/2019-05/14869227.html" target="_blank">
+                                            <img src="http://himg2.huanqiu.com/attachment2010/2019/0510/09/56/20190510095605720.jpg" alt="红场阅兵女兵齐刷刷走来" />
+                                            <span></span>
+                                        </a>
+                                        <p>
+                                            <a href="http://mil.huanqiu.com/milmovie/2019-05/14869227.html" target="_blank">红场阅兵女兵齐刷刷走来</a>
+                                        </p>
+                                                                                                                    </li>
+                                </ul>
+                            </div>
+
+                            <ul class="videoNews">
+                                                                                                        <li>
+                                    <a href="http://tech.huanqiu.com/video/2019-05/14837904.htmlhttp://tech.huanqiu.com/video/2019-05/14865662.html" target="_blank">中国科学家发现具有膜质翅膀的恐龙</a>
+                                    </li>
+                                                                                                                                                                        <li>
+                                    <a href="http://v.huanqiu.com/observation/2019-05/14868939.html" target="_blank">鱼香肉丝到底有没有鱼</a>
+                                </li>
+                                                                                                                                <li>
+                                    <a href="http://v.huanqiu.com/observation/2019-05/14868936.html" target="_blank">这才是皮皮虾最正确的吃法</a>
+                                </li>
+                                                                                                                                <li>
+                                    <a href="http://v.huanqiu.com/observation/2019-05/14868947.html" target="_blank">半小时搞定泰式鱼饼</a>
+                                </li>
+                                                                                            </ul>
+                        </div>
+                        <!-- 中间-视频 end-->
+                        <!-- 左侧-海外看中国 begin-->
+                        <div class="overseaChina">
+                            <div class="indexTitle">
+                                <strong>海外看中国</strong>
+                                <a href="http://20218.cn/" target="_blank">新闻中心</a>
+                                <a href="http://911188.COM/A/" target="_blank">BLOG</a>
+                                <a href="http://20218.cn/" target="_blank">美女</a>
+                                <a href="http://20198.cn/" target="_blank">视频</a>
+                                <a href="http://911188.com/" target="_blank">更多</a>
+                                <span class="udline3"></span>
+                            </div>
+                            <div class="overseaCNews">
+                                <h4><a href="http://oversea.huanqiu.com/" se_prerender_url="complete" target="_blank">美前总统助理:美鹰派不应把中国变成敌人</a></h4>
+<h5><a href="http://oversea.huanqiu.com/" se_prerender_url="complete" target="_blank">此外，中国已是世界最大的贸易国，中国与美国盟友如韩国的贸易超过了美国与它们的贸易。</a></h5>
+<p><strong>印学者<span>|</span></strong><a href="http://oversea.huanqiu.com/article/2019-05/14874087.html" se_prerender_url="complete" target="_blank">印新政府应重新思考"一带一路"倡议</a></p>
+<p><strong>日媒<span>|</span></strong><a href="http://oversea.huanqiu.com/article/2019-05/14874067.html" se_prerender_url="complete" target="_blank">中国人出国游，玩比吃重要</a></p>
+<p><strong>美媒<span>|</span></strong><a href="http://oversea.huanqiu.com/article/2019-05/14874069.html" se_prerender_url="complete" target="_blank">中国民航三巨头布局北京大兴新机场</a></p>
+<p><strong>西班牙人<span>|</span></strong><a href="http://oversea.huanqiu.com/article/2019-05/14869738.html" se_prerender_url="complete" target="_blank">我把自己看成实实在在新上海人</a></p>                            </div>
+                        </div>
+                        <!-- 左侧-海外看中国 end-->
+					</div>
+					<!-- 中间 end-->
+				</div>
+				<!-- 第二部分 end-->
+				<!-- ad begin-->
+				<div class="ad_box">
+<iframe height='90' width='720' frameborder='no' scrolling='no' src= 'http://ad009.8898ad.com:2516/code/color_caik.php?&size=5&pp=0&u=117160'></iframe>
+				</div>
+				<!-- ad end-->
+			</div>
+		</div>
+	</div>
+	<!-- 内容外侧 end-->
 </div>
 
+<script src="http://himg2.huanqiu.com/statics/hq2013/js/lib/jquery1.9.1.js" type="text/javascript"></script>
+<script type="text/javascript" src="https://js.users.51.la/19986221.js"></script>
+<script src="http://himg2.huanqiu.com/statics/hq2017/index1/js/sea.js" type="text/javascript" data-main="http://himg2.huanqiu.com/statics/hq2017/index1/js/index2015.js"></script>
+
 </body>
-
-</html><body>
-
-<div id="container"><div id="output"></div></div>
-<div class="cs">
-<p align="center"><a target="_blank" style="  text-decoration:none;font-size: 20px;  color:#fff;    font-family: 微软雅黑;">维护中</a></p><br><br><br>
-<p align="center"><a  style="  text-decoration:none;font-size: 50px;      font-family: 微软雅黑;">&nbsp;</a></p><br><br><br>
-<img src="https://vr0.6rooms.com/imges/favicon.ico" id="logo"><br>
-<p align="center"><a  style="  text-decoration:none;font-size: 50px;      font-family: 微软雅黑;">&nbsp;</a></p><br><br><br>
-<p align="center"><a  style="  text-decoration:none;font-size: 50px;   color:aqua;   font-family: 微软雅黑;">请访问以下网站</a></p><br><br><br>
-<p align="center"><a  style="  text-decoration:none;font-size: 50px;     font-family: 微软雅黑;">&nbsp;</a></p><br><br><br>
-<a href="http://20218.cn" class="button button-glow button-rounded button-caution" target="_blan"><i class="fa fa-star"></i>日本</a>
-
-<a href="http://20218.cn" class="button button-glow button-rounded button-royal" target="_blan"><i class="fa fa-qq"></i>视频</a>
-<a href="http://www.20218.cn" class="button button-glow button-rounded button-action" target="_blan">音乐</a>
-
-<!-- <a href="http://911188.com" class="button button-glow button-rounded button-highlight" target="_blank这个标记在新的页面打开"><i class="fa fa-header"></i>www.911188.com</a> -->
-</div>
-
-<audio autoplay="autoplay" loop>
-	<source src="http://911188.com/AD/The_Mass.mp3" type="audio/mpeg">
-</audio>
-</body>
-
-<style type="text/css">body, a, a:link{cursor:url(./cur117.cur), default;} a:hover {cursor:url(./cur116.cur),wait;}</style>
+</html>
